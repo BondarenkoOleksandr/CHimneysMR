@@ -1,3 +1,15 @@
 from django.contrib import admin
 
-# Register your models here.
+from articles.models import Article, Paragraphs, Comment, ArticleRating
+
+
+class ArticleInlines(admin.TabularInline):
+    model = Paragraphs
+
+
+class ArticleAdmin(admin.ModelAdmin):
+    inlines = (ArticleInlines,)
+
+
+admin.site.register(Article, ArticleAdmin)
+admin.site.register(Comment)
