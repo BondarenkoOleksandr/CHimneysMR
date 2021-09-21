@@ -1,0 +1,7 @@
+.idea/
+env/
+*.pyc
+*.sqlite3
+*.env
+.*
+!.env.example
