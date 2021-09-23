@@ -21,9 +21,15 @@ def get_user_ip(request):
 
 
 def add_images_path(request, model, data):
-    if model.firstscreen.image:
-        data['first_screen'].update({'image': request.build_absolute_uri(model.firstscreen.image.url)})
-    if model.thirdscreen.image:
-        data['third_screen'].update({'image': request.build_absolute_uri(model.thirdscreen.image.url)})
+    try:
+        if model.fscity.image:
+            data['first_screen'].update({'image': request.build_absolute_uri(model.fscity.image.url)})
+        if model.tscity.image:
+            data['third_screen'].update({'image': request.build_absolute_uri(model.tscity.image.url)})
+    except:
+        if model.fsstate.image:
+            data['first_screen'].update({'image': request.build_absolute_uri(model.fsstate.image.url)})
+        if model.tsstate.image:
+            data['third_screen'].update({'image': request.build_absolute_uri(model.tsstate.image.url)})
 
     return data

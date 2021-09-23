@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+
+  backend:
+    build: ./
+    container_name: сh_mr_container
+    restart: always
+    command: ./commands/start_server.sh
+    networks:
+      artadsnet:
+        ipv4_address: 172.26.0.6
+    volumes:
+      - ./src:/srv/project/src
+      - ./commands:/srv/project/commands
+      - static_content:/var/www/ch_mr
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:12
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      artadsnet:
+        ipv4_address: 172.26.0.7
+    env_file:
+      - .env
+#    environment:
+#      - DJANGO_SETTINGS_MODULE=ArtAds.settings.${MODE}
+
+  nginx:
+    image: nginx:1.19
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - static_content:/var/www/ch_mr
+    networks:
+      artadsnet:
+        ipv4_address: 172.26.0.8
+    env_file:
+      - .env
+    depends_on:
+      - backend
+
+networks:
+  artadsnet:
+    external: true
+
+volumes:
+  pg_data: {}
+  static_content: {}

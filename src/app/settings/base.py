@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     'faqs',
     'services',
     'coupons',
+    'locations',
+    'core',
+    'employees',
 
 ]
 
