@@ -9,7 +9,7 @@ services:
     command: ./commands/start_server.sh
     networks:
       artadsnet:
-        ipv4_address: 172.26.0.6
+        ipv4_address: 172.26.0.12
     volumes:
       - ./src:/srv/project/src
       - ./commands:/srv/project/commands
@@ -25,7 +25,7 @@ services:
       - pg_data:/var/lib/postgresql/data
     networks:
       artadsnet:
-        ipv4_address: 172.26.0.7
+        ipv4_address: 172.26.0.13
     env_file:
       - .env
 #    environment:
@@ -38,7 +38,7 @@ services:
       - static_content:/var/www/ch_mr
     networks:
       artadsnet:
-        ipv4_address: 172.26.0.8
+        ipv4_address: 172.26.0.14
     env_file:
       - .env
     depends_on:
