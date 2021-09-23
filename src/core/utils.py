@@ -17,7 +17,7 @@ def get_user_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
 
-        return ip
+    return ip
 
 
 def add_images_path(request, model, data):
