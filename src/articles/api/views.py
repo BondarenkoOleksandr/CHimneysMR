@@ -58,6 +58,8 @@ class ArticleDetailView(RetrieveAPIView):
 
     def get(self, request, id):
         article = Article.objects.filter(id=id)
+        if not article:
+            return JsonResponse(['Article not fount'], safe=False)
         obj, created = ArticleView.objects.get_or_create(IPAddress=get_user_ip(request), article=article.first())
         article = article.values('id', 'author__username', 'title', 'excerpt', 'image',
                                  'publish_date', 'slug')
