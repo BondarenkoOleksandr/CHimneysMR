@@ -1,9 +1,10 @@
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
 
 # Create your models here.
 from taggit.managers import TaggableManager
+
+from accounts.models import User
 
 
 class Article(models.Model):
@@ -11,7 +12,7 @@ class Article(models.Model):
     author = models.ForeignKey(User, related_name='poster', on_delete=models.SET_NULL, null=True)
     image = models.ImageField(default='default-picture.png', upload_to='articles/', null=True)
     title = models.CharField(max_length=100)
-    excerpt = models.TextField(max_length=250, null=True)
+    excerpt = models.TextField(max_length=1000, null=True)
     slug = models.SlugField(
         max_length=100,
         editable=False,
