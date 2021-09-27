@@ -1,10 +1,10 @@
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
 
 # Create your models here.
 from taggit.managers import TaggableManager
 
-from accounts.models import User
 
 
 class Article(models.Model):
