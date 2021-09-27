@@ -4,7 +4,7 @@ services:
 
   backend:
     build: ./
-    container_name: сh_mr_container
+    container_name: ch_container
     restart: always
     command: ./commands/start_server.sh
     networks:
