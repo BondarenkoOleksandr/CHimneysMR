@@ -9,7 +9,7 @@ from taggit.models import Tag
 from django.forms.models import model_to_dict
 from articles.api.serializers import ArticleSerializer, TagSerializer, CommentSerializer, ArticleRatingSerializer
 from articles.models import Article, Comment, ArticleRating, ArticleView, Paragraphs
-from core.utils import get_user_ip
+from core.utils import get_user_ip, queryset_pagination
 
 
 class ArticleListView(ListAPIView):
@@ -17,7 +17,7 @@ class ArticleListView(ListAPIView):
     serializer_class = ArticleSerializer
 
     def get(self, request):
-        articles = Article.objects.all()
+        articles = queryset_pagination(self.request, Article.objects.all())
         tags_list = [list(article.tags.values('name', 'slug')) for article in articles]
         articles = Article.objects.values('id', 'author__username', 'title', 'excerpt', 'image', 'publish_date',
                                           'slug')
@@ -43,6 +43,9 @@ class ArticleListView(ListAPIView):
 class TagsListView(ListAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+    def get_queryset(self, request):
+        return queryset_pagination(Tag.objects.all())
 
 
 class ArticleCommentListView(ListAPIView):
@@ -90,7 +93,7 @@ class ArticleDetailBySlugView(RetrieveAPIView):
     serializer_class = ArticleSerializer
 
     def get(self, request, slug):
-        article = Article.objects.filter(slug=slug)
+        article = queryset_pagination(request, Article.objects.filter(slug=slug))
         if not article:
             return JsonResponse(['Article not fount'], safe=False)
         obj, created = ArticleView.objects.get_or_create(IPAddress=get_user_ip(request), article=article.first())

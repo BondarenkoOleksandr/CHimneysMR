@@ -33,3 +33,23 @@ def add_images_path(request, model, data):
             data['third_screen'].update({'image': request.build_absolute_uri(model.tsstate.image.url)})
 
     return data
+
+
+def queryset_pagination(request, queryset):
+
+    if not request.POST.get('per_page', False):
+        return queryset
+
+    try:
+        page = int(request.POST.get('page', 0))
+        per_page = int(request.POST.get('per_page', 0))
+    except:
+        raise ValueError('Int value expected but str given')
+
+    start = page * per_page
+    end = start + per_page
+
+    if start > len(queryset) or end > len(queryset):
+        return queryset
+
+    return queryset[start:end]
