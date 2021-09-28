@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'locations',
     'core',
     'employees',
+    'accounts',
 
 ]
 
@@ -143,3 +144,14 @@ TAGGIT_CASE_INSENSITIVE = True
 
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+
+# Rest Registration
+
+
+GOOGLE_ID_TOKEN_INFO_URL = 'https://www.googleapis.com/oauth2/v3/tokeninfo'
+GOOGLE_ACCESS_TOKEN_OBTAIN_URL = 'https://oauth2.googleapis.com/token'
+GOOGLE_USER_INFO_URL = 'https://www.googleapis.com/oauth2/v3/userinfo'
+
+GOOGLE_OAUTH2_CLIENT_ID = '551586915430-tqjp7rsp2thrsp71sr9s3ukkb8nkf8eu.apps.googleusercontent.com'
+GOOGLE_OAUTH2_CLIENT_SECRET = 'kZ5ibLQG6yhcO5XkYVloUdL6'
