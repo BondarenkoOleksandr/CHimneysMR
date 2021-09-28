@@ -49,8 +49,3 @@ class GoogleLoginApi(APIView):
         response = jwt_login(response=response, user=user)
 
         return response
-
-
-class UserMeApi(APIView):
-    def get(self, request, *args, **kwargs):
-        return Response(user_get_me(user=request.user))
