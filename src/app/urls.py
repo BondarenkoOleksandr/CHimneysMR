@@ -23,6 +23,7 @@ from app.views import index
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
+    path('login/', include('accounts.urls')),
 ]
 
 urlpatterns += [
@@ -32,6 +33,7 @@ urlpatterns += [
     path('api/', include('coupons.api.urls')),
     path('api/', include('locations.api.urls')),
     path('api/', include('employees.api.urls')),
+    path('api/', include('accounts.api.urls')),
 ]
 
 urlpatterns += \

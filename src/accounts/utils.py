@@ -4,7 +4,6 @@ import requests
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
-from rest_framework_jwt.compat import set_cookie_with_token
 from rest_framework_jwt.settings import api_settings
 
 from accounts.services import user_record_login
@@ -51,9 +50,7 @@ def jwt_login(*, response: HttpResponse, user: User) -> HttpResponse:
     payload = jwt_payload_handler(user)
     token = jwt_encode_handler(payload)
 
-    if api_settings.JWT_AUTH_COOKIE:
-        # Reference: https://github.com/Styria-Digital/django-rest-framework-jwt/blob/master/src/rest_framework_jwt/compat.py#L43
-        set_cookie_with_token(response, api_settings.JWT_AUTH_COOKIE, token)
+    response.set_cookie('token', token)
 
     user_record_login(user=user)
 

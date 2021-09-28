@@ -1,5 +1,10 @@
+import datetime
+
+from django.utils import timezone
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.fields.files import ImageFieldFile
+from rest_framework.exceptions import ValidationError
+from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 
 
 class ExtendedEncoder(DjangoJSONEncoder):
@@ -33,3 +38,41 @@ def add_images_path(request, model, data):
             data['third_screen'].update({'image': request.build_absolute_uri(model.tsstate.image.url)})
 
     return data
+
+
+def get_now() -> datetime.datetime:
+    return timezone.now()
+
+
+def queryset_pagination(request, queryset):
+
+    if not request.GET.get('per_page', False):
+        return queryset
+
+    try:
+        page = int(request.GET.get('page', 0))
+        per_page = int(request.GET.get('per_page', 0))
+    except:
+        raise ValueError('Int value expected but str given')
+
+    start = page * per_page
+    end = start + per_page
+
+    if start > len(queryset) or end > len(queryset):
+        return queryset
+
+    return queryset[start:end]
+
+
+def get_user_by_jwt(request):
+    token = request.META.get('HTTP_AUTHORIZATION', " ").split(' ')[1]
+    print(token)
+    data = {'token': token}
+    try:
+        valid_data = VerifyJSONWebTokenSerializer().validate(data)
+        user = valid_data['user']
+        request.user = user
+        return user
+    except ValidationError as v:
+        print("validation error", v)
+        return False

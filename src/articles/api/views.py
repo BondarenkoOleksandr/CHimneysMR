@@ -1,15 +1,11 @@
-import json
-
 from django.db.models import Avg
-from django.http import JsonResponse
-from django.core import serializers
-from django.core.serializers.json import DjangoJSONEncoder
+from django.http import JsonResponse, HttpResponseBadRequest
 from rest_framework.generics import ListAPIView, RetrieveAPIView, get_object_or_404, CreateAPIView
 from taggit.models import Tag
 from django.forms.models import model_to_dict
 from articles.api.serializers import ArticleSerializer, TagSerializer, CommentSerializer, ArticleRatingSerializer
 from articles.models import Article, Comment, ArticleRating, ArticleView, Paragraphs
-from core.utils import get_user_ip
+from core.utils import get_user_ip, queryset_pagination, get_user_by_jwt
 
 
 class ArticleListView(ListAPIView):
@@ -17,8 +13,8 @@ class ArticleListView(ListAPIView):
     serializer_class = ArticleSerializer
 
     def get(self, request):
-        articles = Article.objects.all()
-        tags_list = [list(article.tags.values('name')) for article in articles]
+        articles = queryset_pagination(self.request, Article.objects.all())
+        tags_list = [list(article.tags.values('name', 'slug')) for article in articles]
         articles = Article.objects.values('id', 'author__username', 'title', 'excerpt', 'image', 'publish_date',
                                           'slug')
         indx = 0
@@ -44,20 +40,26 @@ class TagsListView(ListAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 
+    def get_queryset(self, request):
+        return queryset_pagination(Tag.objects.all())
+
 
 class ArticleCommentListView(ListAPIView):
     serializer_class = CommentSerializer
 
-    def get_queryset(self, id):
-        article_id = id
-        return Comment.objects.filter(article__id=article_id, status=1)
+    def get_queryset(self):
+        article_id = self.request.data.get('article', '')
+        if article_id:
+            return Comment.objects.filter(article__id=article_id, status=1)
+        else:
+            return JsonResponse(status=400)
 
 
 class ArticleDetailView(RetrieveAPIView):
     serializer_class = ArticleSerializer
 
     def get(self, request, id):
-        article = Article.objects.filter(id=id)
+        article = get_object_or_404(Article, id=id)
         if not article:
             return JsonResponse(['Article not fount'], safe=False)
         obj, created = ArticleView.objects.get_or_create(IPAddress=get_user_ip(request), article=article.first())
@@ -90,7 +92,7 @@ class ArticleDetailBySlugView(RetrieveAPIView):
     serializer_class = ArticleSerializer
 
     def get(self, request, slug):
-        article = Article.objects.filter(slug=slug)
+        article = queryset_pagination(request, Article.objects.filter(slug=slug))
         if not article:
             return JsonResponse(['Article not fount'], safe=False)
         obj, created = ArticleView.objects.get_or_create(IPAddress=get_user_ip(request), article=article.first())
@@ -129,9 +131,12 @@ class ArticleRatingCreateView(CreateAPIView):
     queryset = ArticleRating.objects.all()
     serializer_class = ArticleRatingSerializer
 
-    def post(self, request, id):
-        article = Article.objects.get(id=id)
+    def post(self, request):
+        article_id = request.POST.get('article', '')
         rating = self.request.POST.get('rating', 5)
+        if not article_id or not rating:
+            return HttpResponseBadRequest('Mandatory data not transmitted', status=400)
+        article = get_object_or_404(Article, id=article_id)
         obj, created = ArticleRating.objects.get_or_create(IPAddress=get_user_ip(request), article=article)
         if obj:
             obj.rating = rating
@@ -142,9 +147,9 @@ class ArticleRatingCreateView(CreateAPIView):
 
 class ArticleByTagView(RetrieveAPIView):
     def get(self, request, *args, **kwargs):
-        search_tags = self.request.GET.get('tags', '').split(',')
-        articles_by_tag = Article.objects.filter(tags__name__in=search_tags).distinct()
-        tags_list = [list(obj.tags.values('name')) for obj in articles_by_tag]
+        search_tags = self.request.GET.get('tags', '').lower().split(',')
+        articles_by_tag = Article.objects.filter(tags__slug__in=search_tags).distinct()
+        tags_list = [list(obj.tags.values('name', 'slug')) for obj in articles_by_tag]
         articles_by_tag = articles_by_tag.values('id', 'author__username', 'title', 'excerpt', 'image', 'publish_date',
                                                  'slug')
         indx = 0
@@ -165,3 +170,27 @@ class ArticleByTagView(RetrieveAPIView):
         data = list(articles_by_tag)
 
         return JsonResponse(data, safe=False, json_dumps_params={'indent': 2})
+
+
+class CreateCommentAPI(CreateAPIView):
+
+    def post(self, request, *args, **kwargs):
+        article_id = request.data.get('article', '')
+        text = request.data.get('text', '')
+        parent = request.data.get('parent', '')
+
+        user = get_user_by_jwt(request)
+        article = get_object_or_404(Article, id=article_id)
+
+        comment = Comment.objects.create(
+            user=user,
+            article=article,
+            text=text,
+        )
+
+        if parent:
+            parent = get_object_or_404(Comment, id=parent)
+            comment.parent = parent
+            comment.save()
+
+        return JsonResponse({'status': 1})
