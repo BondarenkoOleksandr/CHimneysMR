@@ -147,12 +147,11 @@ TAGGIT_CASE_INSENSITIVE = True
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-<<<<<<< HEAD
+
 JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3600),
 }
-=======
 DOMAIN = 'https://chimneys.garagedoors.fun'
 
 # Rest Registration
@@ -173,4 +172,3 @@ FACEBOOK_USER_FULL_INFO_URL = 'https://graph.facebook.com/v12.0/'
 
 FACEBOOK_OAUTH2_CLIENT_ID = '1013078522871763'
 FACEBOOK_OAUTH2_CLIENT_SECRET = 'a8b1855ec7ed02d4d2602150ae6aaf1d'
->>>>>>> 1ed7da5f399e20a2b7473c81dc9d369b2b27de94
