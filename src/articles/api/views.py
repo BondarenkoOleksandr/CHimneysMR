@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db.models import Avg
 from django.http import JsonResponse, HttpResponseBadRequest
 from rest_framework.generics import ListAPIView, RetrieveAPIView, get_object_or_404, CreateAPIView
@@ -182,15 +183,20 @@ class CreateCommentAPI(CreateAPIView):
         user = get_user_by_jwt(request)
         article = get_object_or_404(Article, id=article_id)
 
-        comment = Comment.objects.create(
-            user=user,
-            article=article,
-            text=text,
-        )
+        if isinstance(user, User):
 
-        if parent:
-            parent = get_object_or_404(Comment, id=parent)
-            comment.parent = parent
-            comment.save()
+            comment = Comment.objects.create(
+                user=user,
+                article=article,
+                text=text,
+            )
 
-        return JsonResponse({'status': 1})
+            if parent:
+                parent = get_object_or_404(Comment, id=parent)
+                comment.parent = parent
+                comment.save()
+
+            return JsonResponse({'status': 1})
+
+        else:
+            return JsonResponse(user[0], status=400, safe=False)

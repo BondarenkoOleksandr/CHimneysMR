@@ -1,4 +1,5 @@
 import datetime
+from autoslug.utils import slugify
 
 from django.utils import timezone
 from django.core.serializers.json import DjangoJSONEncoder
@@ -75,4 +76,11 @@ def get_user_by_jwt(request):
         return user
     except ValidationError as v:
         print("validation error", v)
-        return False
+        return v.args
+
+
+def change_slug(models):
+    for model in models:
+        name = model.name
+        model.slug = slugify(name)
+        model.save()
