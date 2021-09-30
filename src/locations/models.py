@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 # Create your models here.
@@ -7,6 +9,11 @@ from core.models import FirstScreen, SecondScreen, ThirdScreen
 class State(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(null=True)
+    slug = models.SlugField(
+        max_length=150,
+        default=uuid.uuid1,
+        editable=False,
+    )
 
     def __str__(self):
         return self.name
@@ -17,6 +24,11 @@ class City(models.Model):
     name = models.CharField(max_length=150, null=True)
     description = models.TextField(null=True)
     zip = models.IntegerField(null=True)
+    slug = models.SlugField(
+        max_length=150,
+        default=uuid.uuid1,
+        editable=False,
+    )
 
     class Meta:
         verbose_name_plural = "Cities"

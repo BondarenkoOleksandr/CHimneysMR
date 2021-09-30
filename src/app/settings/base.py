@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'locations',
     'core',
     'employees',
+    'accounts',
 
 ]
 
@@ -146,7 +147,30 @@ TAGGIT_CASE_INSENSITIVE = True
 
 CORS_ORIGIN_ALLOW_ALL = True
 
+<<<<<<< HEAD
 JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3600),
 }
+=======
+DOMAIN = 'https://chimneys.garagedoors.fun'
+
+# Rest Registration
+
+GOOGLE_ID_TOKEN_INFO_URL = 'https://www.googleapis.com/oauth2/v3/tokeninfo'
+GOOGLE_ACCESS_TOKEN_OBTAIN_URL = 'https://oauth2.googleapis.com/token'
+GOOGLE_USER_INFO_URL = 'https://www.googleapis.com/oauth2/v3/userinfo'
+
+GOOGLE_OAUTH2_CLIENT_ID = '551586915430-tqjp7rsp2thrsp71sr9s3ukkb8nkf8eu.apps.googleusercontent.com'
+GOOGLE_OAUTH2_CLIENT_SECRET = 'kZ5ibLQG6yhcO5XkYVloUdL6'
+
+
+# Facebook configuration
+FACEBOOK_ID_TOKEN_INFO_URL = 'https://www.googleapis.com/oauth2/v3/tokeninfo'
+FACEBOOK_ACCESS_TOKEN_OBTAIN_URL = 'https://graph.facebook.com/v12.0/oauth/access_token'
+FACEBOOK_USER_SHORT_INFO_URL = 'https://graph.facebook.com/me'
+FACEBOOK_USER_FULL_INFO_URL = 'https://graph.facebook.com/v12.0/'
+
+FACEBOOK_OAUTH2_CLIENT_ID = '1013078522871763'
+FACEBOOK_OAUTH2_CLIENT_SECRET = 'a8b1855ec7ed02d4d2602150ae6aaf1d'
+>>>>>>> 1ed7da5f399e20a2b7473c81dc9d369b2b27de94
