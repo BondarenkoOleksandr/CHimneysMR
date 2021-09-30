@@ -1,21 +1,12 @@
 from django.contrib.auth.models import User
 from django.db.models import Avg
 from django.http import JsonResponse, HttpResponseBadRequest
-<<<<<<< HEAD
-from django.core import serializers
-from django.core.serializers.json import DjangoJSONEncoder
-=======
->>>>>>> 1ed7da5f399e20a2b7473c81dc9d369b2b27de94
 from rest_framework.generics import ListAPIView, RetrieveAPIView, get_object_or_404, CreateAPIView
 from taggit.models import Tag
 from django.forms.models import model_to_dict
 from articles.api.serializers import ArticleSerializer, TagSerializer, CommentSerializer, ArticleRatingSerializer
 from articles.models import Article, Comment, ArticleRating, ArticleView, Paragraphs
-<<<<<<< HEAD
-from core.utils import get_user_ip, queryset_pagination
-=======
 from core.utils import get_user_ip, queryset_pagination, get_user_by_jwt
->>>>>>> 1ed7da5f399e20a2b7473c81dc9d369b2b27de94
 
 
 class ArticleListView(ListAPIView):

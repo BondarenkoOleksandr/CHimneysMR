@@ -40,17 +40,6 @@ def add_images_path(request, model, data):
 
     return data
 
-
-<<<<<<< HEAD
-def queryset_pagination(request, queryset):
-
-    if not request.POST.get('per_page', False):
-        return queryset
-
-    try:
-        page = int(request.POST.get('page', 0))
-        per_page = int(request.POST.get('per_page', 0))
-=======
 def get_now() -> datetime.datetime:
     return timezone.now()
 
@@ -63,7 +52,6 @@ def queryset_pagination(request, queryset):
     try:
         page = int(request.GET.get('page', 0))
         per_page = int(request.GET.get('per_page', 0))
->>>>>>> 1ed7da5f399e20a2b7473c81dc9d369b2b27de94
     except:
         raise ValueError('Int value expected but str given')
 
@@ -74,8 +62,6 @@ def queryset_pagination(request, queryset):
         return queryset
 
     return queryset[start:end]
-<<<<<<< HEAD
-=======
 
 
 def get_user_by_jwt(request):
@@ -97,4 +83,3 @@ def change_slug(models):
         name = model.name
         model.slug = slugify(name)
         model.save()
->>>>>>> 1ed7da5f399e20a2b7473c81dc9d369b2b27de94
