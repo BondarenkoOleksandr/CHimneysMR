@@ -8,11 +8,11 @@ class FirstScreenInlines(admin.TabularInline):
     model = FSCity
 
 
-class SecondScreenInlines(admin.TabularInline):
+class SecondScreenInlines(admin.StackedInline):
     model = SSCity
 
 
-class ThirdScreenInlines(admin.TabularInline):
+class ThirdScreenInlines(admin.StackedInline):
     model = TSCity
 
 
@@ -24,7 +24,7 @@ class RegionModelAdmin(admin.ModelAdmin):
     inlines = (FirstScreenInlines, SecondScreenInlines, ThirdScreenInlines, SEOCityInlines)
 
 
-class FirstScreenStateInlines(admin.TabularInline):
+class FirstScreenStateInlines(admin.StackedInline):
     model = FSState
 
 
@@ -32,11 +32,11 @@ class SEOStateInlines(admin.StackedInline):
     model = SEOState
 
 
-class SecondScreenStateInlines(admin.TabularInline):
+class SecondScreenStateInlines(admin.StackedInline):
     model = SSState
 
 
-class ThirdScreenStateInlines(admin.TabularInline):
+class ThirdScreenStateInlines(admin.StackedInline):
     model = TSState
 
 
