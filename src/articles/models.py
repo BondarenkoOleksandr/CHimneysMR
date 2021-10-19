@@ -1,16 +1,21 @@
-from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
-from django.db import models
+import datetime
 
-# Create your models here.
+from django.contrib.auth.models import User
+from django.db import models
+from django.db.models import Avg
+
+from django.core.exceptions import ValidationError
 from taggit.managers import TaggableManager
 
+# Create your models here.
+from gallery.models import Photo
+from seo.models import SEOBase
 
 
 class Article(models.Model):
     RATING_COUNT = [(i, i) for i in range(1, 6)]
     author = models.ForeignKey(User, related_name='poster', on_delete=models.SET_NULL, null=True)
-    image = models.ImageField(default='default-picture.png', upload_to='articles/', null=True)
+    bg_image = models.ForeignKey(Photo, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=100)
     excerpt = models.TextField(max_length=1000, null=True)
     slug = models.SlugField(
@@ -26,15 +31,14 @@ class Article(models.Model):
         if not self.slug and Article.objects.filter(title__iexact=self.title):
             raise ValidationError('Article with this title already exists')
 
+    def get_absolute_bg_image_url(self):
+        return self.request.scheme + '://' + self.get_host() + self.bg_image.image.url
+
     def __str__(self):
         return self.title + ' - ' + self.author.username
 
     def number_of_likes(self):
         return self.likes.count()
-
-    @property
-    def views_count(self):
-        return ArticleView.objects.filter(article=self).count()
 
     def get_slug(self):
         return self.slug
@@ -57,7 +61,7 @@ class ArticleRating(models.Model):
         (5, 'Excellent'),
     )
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='article_rating')
-    rating = models.SmallIntegerField(choices=STARS, null=True, default=STARS[0])
+    rating = models.SmallIntegerField(choices=STARS, null=True, default=STARS[4][0])
     IPAddress = models.GenericIPAddressField(default="45.243.82.169")
 
     @property
@@ -83,10 +87,16 @@ class Comment(models.Model):
     status = models.IntegerField(choices=STATUS_LEVEL, default=0)
 
     text = models.CharField(max_length=250)
-    pub_date = models.DateTimeField('date published', auto_now_add=True)
+    pub_date = models.DateField('date published', auto_now_add=True)
 
     def __str__(self):
         return self.text[0:15] + ' - ' + self.article.title + ' - ' + self.user.username
+
+    def get_absolute_user_image_url(self):
+        return self.request.scheme + '://' + self.get_host() + self.user.image.url
+
+    def get_pub_date(self):
+        return self.pub_date.strftime("%d %b %Y")
 
 
 class Paragraphs(models.Model):
@@ -104,3 +114,10 @@ class Paragraphs(models.Model):
 
     class Meta:
         verbose_name_plural = "Paragraphs"
+
+
+class SEOArticle(SEOBase):
+    article = models.OneToOneField(Article, on_delete=models.CASCADE, null=True, related_name='seo')
+
+    class Meta:
+        verbose_name_plural = "SEO"

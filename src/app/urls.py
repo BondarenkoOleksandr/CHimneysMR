@@ -34,6 +34,7 @@ urlpatterns += [
     path('api/', include('locations.api.urls')),
     path('api/', include('employees.api.urls')),
     path('api/', include('accounts.api.urls')),
+    path('api/', include('reviews.api.urls')),
 ]
 
 urlpatterns += \

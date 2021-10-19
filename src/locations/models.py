@@ -4,6 +4,7 @@ from django.db import models
 
 # Create your models here.
 from core.models import FirstScreen, SecondScreen, ThirdScreen
+from seo.models import SEOBase
 
 
 class State(models.Model):
@@ -59,3 +60,17 @@ class SSState(SecondScreen):
 
 class TSState(ThirdScreen):
     state = models.OneToOneField(to=State, on_delete=models.CASCADE, null=True)
+
+
+class SEOState(SEOBase):
+    state = models.OneToOneField(State, on_delete=models.CASCADE, null=True, related_name='seo')
+
+    class Meta:
+        verbose_name_plural = "SEO"
+
+
+class SEOCity(SEOBase):
+    state = models.OneToOneField(City, on_delete=models.CASCADE, null=True, related_name='seo')
+
+    class Meta:
+        verbose_name_plural = "SEO"
