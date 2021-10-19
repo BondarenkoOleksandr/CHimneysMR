@@ -41,25 +41,43 @@ class City(models.Model):
 class FSCity(FirstScreen):
     city = models.OneToOneField(to=City, on_delete=models.CASCADE, null=True)
 
+    class Meta:
+        verbose_name_plural = "First Screen"
+
 
 class SSCity(SecondScreen):
     city = models.OneToOneField(to=City, on_delete=models.CASCADE, null=True)
+
+    class Meta:
+        verbose_name_plural = "Second Screen"
 
 
 class TSCity(ThirdScreen):
     city = models.OneToOneField(to=City, on_delete=models.CASCADE, null=True)
 
+    class Meta:
+        verbose_name_plural = "Third Screen"
+
 
 class FSState(FirstScreen):
     state = models.OneToOneField(to=State, on_delete=models.CASCADE, null=True)
+
+    class Meta:
+        verbose_name_plural = "First Screen"
 
 
 class SSState(SecondScreen):
     state = models.OneToOneField(to=State, on_delete=models.CASCADE, null=True)
 
+    class Meta:
+        verbose_name_plural = "Second Screen"
+
 
 class TSState(ThirdScreen):
     state = models.OneToOneField(to=State, on_delete=models.CASCADE, null=True)
+
+    class Meta:
+        verbose_name_plural = "Third Screen"
 
 
 class SEOState(SEOBase):
