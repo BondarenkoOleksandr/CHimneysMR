@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from locations.models import City, FSCity, SSCity, TSCity, FSState, SSState, TSState, State
+from locations.models import City, FSCity, SSCity, TSCity, FSState, SSState, TSState, State, SEOCity
 
 
 class FirstScreenInlines(admin.TabularInline):
@@ -16,8 +16,12 @@ class ThirdScreenInlines(admin.TabularInline):
     model = TSCity
 
 
+class SEOCityInlines(admin.StackedInline):
+    model = SEOCity
+
+
 class RegionModelAdmin(admin.ModelAdmin):
-    inlines = (FirstScreenInlines, SecondScreenInlines, ThirdScreenInlines)
+    inlines = (FirstScreenInlines, SecondScreenInlines, ThirdScreenInlines, SEOCityInlines)
 
 
 class FirstScreenStateInlines(admin.TabularInline):
