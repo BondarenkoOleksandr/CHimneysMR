@@ -9,8 +9,7 @@ class Photo(models.Model):
     title = models.CharField(max_length=250)
 
     class Meta:
-        class Meta:
-            verbose_name_plural = "Gallery"
+        verbose_name_plural = "Gallery"
 
     def image_tag(self):
         return mark_safe('<img src="/media/%s" height="300" />' % self.image)
