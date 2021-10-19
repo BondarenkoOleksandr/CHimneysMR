@@ -1,8 +1,11 @@
+import random
+from io import BytesIO
 from typing import Dict, Any
 
 import requests
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.files.images import ImageFile
 from django.http import HttpResponse
 from rest_framework_jwt.settings import api_settings
 
