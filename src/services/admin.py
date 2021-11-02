@@ -1,7 +1,6 @@
 from django.contrib import admin
 
 # Register your models here.
-from nested_inline.admin import NestedStackedInline
 
 from services.models import Service, ServiceCategory, ServiceArticle, ServiceReview, SEOServiceArticle
 

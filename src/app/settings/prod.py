@@ -16,3 +16,5 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'chimneys.garagedoors.fun']
 
 MEDIA_ROOT = '/var/www/ch_mr/media'
 STATIC_ROOT = '/var/www/ch_mr/static'
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

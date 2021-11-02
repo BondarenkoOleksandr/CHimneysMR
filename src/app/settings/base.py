@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'taggit',
     'rest_framework',
+    'drf_yasg',
 
     'articles',
     'accounts',
